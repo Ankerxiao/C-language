@@ -17,51 +17,64 @@
  3.i++并重复第二步直到i==n-1。排序完成。
  */
 
-void InsertSort(int *a,int n)
+void insertSort(int *a,int n)
 {
-    int i,j,k;
+    int i = 0;
+    int j = 0;
+    int k = -1;
+    int temp = -1;
+    
     for(i=1;i<n;i++)
     {
-        //为a[i]在前面的a[0]~a[i-1]有序区间中找一个合适的位置
-        for(j=i-1;j>=0;j--)
-        {
-            if(a[j] < a[i])
-                break;
-        }
+        k = i; //待插入位置
+        temp = *(a+k);
         
-        //如果找到合适的位置
-        if(j != i-1)
+        for(j=i-1;(j>=0)&&(*(a+j)>temp);j--)
         {
-            int temp = a[i];
-            //将比a[i]大的数据向后移
-            for(k=i-1;k>j;k--)
-            {
-                a[k+1] = a[k];
-            }
-            a[k+1] = temp;//将a[i]放到正确位置上
+            *(a+j+1) = *(a+j);//元素后移
+            k = j; //k需要插入的位置
         }
+        *(a+k) = temp;
     }
 }
 
-//void InsertSort(int *a,int left,int right)
-//{
-//    int temp;
-//    int i,j;
-//    for(i=left+1;i<=right;i++)
-//    {
-//        if(a[i] < a[i-1])
-//        {
-//            temp = a[i];
-//            j = i - 1;
-//            do
-//            {
-//                a[j+1] = a[j];
-//                j--;
-//            }while(j>=left && temp<a[j]);
-//            a[j+1] = temp;
-//        }
-//    }
-//}
+void binaryInsertSort(int *a,int n)
+{
+    int temp,k;
+    int low,high,middle;
+    
+    for(int i=1;i<n;i++)
+    {
+        k = i;
+        temp = *(a+k);//元素拿出来，空出位置
+        
+        if(*(a+i-1) > temp)//发生逆序才插入
+        {
+            
+            low = 1;
+            high = i-1;
+            while(low <= high)
+            {
+                middle = (low+high)/2;
+                if(temp<*(a+middle))
+                {
+                    high = middle-1;
+                }
+                else
+                {
+                    low = middle+1;
+                }
+            }
+            
+            for(int j=i-1;j>=low;j--)  //low == high - 1;元素后移
+            {
+                *(a+j+1) = *(a+j);
+                k = j;
+            }
+            *(a+k) = temp;
+        }
+    }
+}
 
 int main(int argc, const char * argv[])
 {
